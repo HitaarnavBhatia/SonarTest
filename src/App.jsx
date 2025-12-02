@@ -27,7 +27,19 @@ function App() {
                 </tr>
                 </thead>
 
-                
+                <tbody>
+                    {students.map((student) => (
+                        <tr key={student.id} className="even:bg-gray-50">
+                            <td className="border-2 border-gray-400 px-4 py-2">{student.id}</td>
+                            <td className="border-2 border-gray-400 px-4 py-2">{student.name}</td>
+                            <td className="border-2 border-gray-400 px-4 py-2">{student.roll}</td>
+                            <td className="border-2 border-gray-400 px-4 py-2">{student.course}</td>
+                            <td className="border-2 border-gray-400 px-4 py-2 space-x-2">
+                                
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
             </table>
         </div>
     );
