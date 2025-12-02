@@ -1,35 +1,53 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import "./index.css";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+    const students = [
+        { id: "S001", name: "Alice", roll: "101", course: "Bachelors of engineerign" },
+        { id: "S002", name: "Bob", roll: "102", course: "Bachelors of Management" },
+        { id: "S003", name: "Charlie", roll: "103", course: "Bachelors of business administration" },
+        { id: "S004", name: "David", roll: "104", course: "Masters in data science" },
+    ];
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    return (
+        <div className="p-8">
+            <h1 className="text-4xl font-bold mb-6 text-center">
+                Student Table
+            </h1>
+
+            <table className="border border-gray-400 w-full shadow-lg">
+                <thead className="bg-gray-100">
+                <tr>
+                    <th className="border-2 border-gray-400 px-4 py-2">ID</th>
+                    <th className="border-2 border-gray-400 px-4 py-2">Name</th>
+                    <th className="border-2 border-gray-400 px-4 py-2">Roll Number</th>
+                    <th className="border-2 border-gray-400 px-4 py-2">Course Name</th>
+                    <th className="border-2 border-gray-400 px-4 py-2">Actions</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                    {students.map((student) => (
+                        <tr key={student.id} className="even:bg-gray-50">
+                            <td className="border-2 border-gray-400 px-4 py-2">{student.id}</td>
+                            <td className="border-2 border-gray-400 px-4 py-2">{student.name}</td>
+                            <td className="border-2 border-gray-400 px-4 py-2">{student.roll}</td>
+                            <td className="border-2 border-gray-400 px-4 py-2">{student.course}</td>
+                            <td className="border-2 border-gray-400 px-4 py-2 space-x-2">
+                                <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">
+                                    Edit
+                                </button>
+                                <button className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
 }
 
-export default App
+export default App;
