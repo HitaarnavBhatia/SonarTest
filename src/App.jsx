@@ -29,13 +29,18 @@ function App() {
 
                 <tbody>
                     {students.map((student) => (
-                        <tr key={student.id} className="even:bg-gray-50">
+                        <tr key={student.id} className="bg-gray">
                             <td className="border-2 border-gray-400 px-4 py-2">{student.id}</td>
                             <td className="border-2 border-gray-400 px-4 py-2">{student.name}</td>
                             <td className="border-2 border-gray-400 px-4 py-2">{student.roll}</td>
                             <td className="border-2 border-gray-400 px-4 py-2">{student.course}</td>
                             <td className="border-2 border-gray-400 px-4 py-2 space-x-2">
-                                
+                                <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">
+                                    Edit
+                                </button>
+                                <button className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">
+                                    Delete
+                                </button>
                             </td>
                         </tr>
                     ))}
