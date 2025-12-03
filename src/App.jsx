@@ -1,10 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./index.css";
 import "./App.css";
 import studentsData from "./students.json"
 
 function App() {
-    const [students, setStudents] = useState(studentsData);
+
+    //initialized local storage, i.e it loads data from localStorage if available otherwise uses json
+    let initialStudents;
+    const storedStudents = localStorage.getItem("students");
+
+    if(storedStudents) {                                //if stored array exists or is not null
+        initialStudents = JSON.parse(storedStudents);    //convert strign to java object using JSON.parse [bcs localStorage saves everything as strings]
+    } else {                                            // if null, then use studentsData which is imported from students.json file
+        initialStudents = studentsData;
+    }
+
+    const [students, setStudents] = useState(initialStudents);
+
+    //saves students data to locaStorage whenevr its updated
+    useEffect(() => (
+        localStorage.setItem("students", JSON.stringify(students))
+      ), [students]);
 
     function addStudent() {
         const newStudent = {
