@@ -1,14 +1,10 @@
 import React, { useState } from "react";
 import "./index.css";
 import "./App.css";
+import studentsData from "./students.json"
 
 function App() {
-    const [students, setStudents] = useState([
-        { id: "S001", name: "Alice", roll: "101", course: "Bachelors of engineering" },
-        { id: "S002", name: "Bob", roll: "102", course: "Bachelors of Management" },
-        { id: "S003", name: "Charlie", roll: "103", course: "Bachelors of business administration" },
-        { id: "S004", name: "David", roll: "104", course: "Masters in data science" },
-    ]);
+    const [students, setStudents] = useState(studentsData);
 
     function addStudent() {
         const newStudent = {
@@ -25,7 +21,6 @@ function App() {
       newStudents.splice(index, 1);          
       setStudents(newStudents);              
   }
-    
 
     return (
         <div className="p-8">

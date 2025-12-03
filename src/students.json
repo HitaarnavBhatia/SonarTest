@@ -1,0 +1,7 @@
+[
+    { "id": "S001", "name": "Alice", "roll": "101", "course": "Bachelors of engineering" },
+    { "id": "S002", "name": "Bob", "roll": "102", "course": "Bachelors of Management" },
+    { "id": "S003", "name": "Charlie", "roll": "103", "course": "Bachelors of business administration" },
+    { "id": "S004", "name": "David", "roll": "104", "course": "Masters in data science" }
+  ]
+  
