@@ -17,20 +17,31 @@ function App() {
 
     const [students, setStudents] = useState(initialStudents);
 
+    const [name, setName] = useState("");
+    const [roll, setRoll] = useState("");
+    const [course, setCourse] = useState("");
+
     //saves students data to locaStorage whenevr its updated
     useEffect(() => (
         localStorage.setItem("students", JSON.stringify(students))
       ), [students]);
 
-    function addStudent() {
+      function addStudent(e) {
+        e.preventDefault();
+      
         const newStudent = {
-            id: `S00${students.length + 1}`,
-            name: "New Student",
-            roll: `${100 + students.length + 1}`,
-            course: "Course Name",
+          id: `S00${students.length + 1}`,
+          name,
+          roll,
+          course,
         };
+      
         setStudents([...students, newStudent]);
-    }
+      
+        setName("");
+        setRoll("");
+        setCourse("");
+      }
   
     function deleteStudent(index) {
       const newStudents = students.slice();  
@@ -44,6 +55,34 @@ function App() {
                 Student Table
             </h1>
 
+        <form onSubmit= {addStudent} className="mb-6 p-4 border border-grey-300 rounded-lg bg-grey-50">
+            
+            <h2 className="text-2xl font-semibold mb-4">Add new students</h2>
+
+        <div className="flex gap-4">
+          <input  onChange={(e) => setName(e.target.value)} type="text" placeholder="Enter Name"
+            value={name}
+            className="border px-3 py-2 rounded w-1/4"
+          />
+
+          <input className="border px-3 py-2 rounded w-1/4" type="number" placeholder="Enter Roll No"
+            value={roll}
+            onChange={(e) => setRoll(e.target.value)}
+          />
+
+          <input className="border px-3 py-2 rounded w-1/4" type="text" placeholder="Enter Course" 
+            value={course}
+            onChange={(e) => setCourse(e.target.value)}
+          />
+
+          <button
+            type="submit"
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+          >
+            Add Student
+          </button>
+        </div>           
+        </form>
             <table className="border border-gray-400 w-full shadow-lg">
                 <thead className="bg-gray-100">
                     <tr>
@@ -63,9 +102,6 @@ function App() {
                             <td className="border-2 border-gray-400 px-4 py-2">{student.roll}</td>
                             <td className="border-2 border-gray-400 px-4 py-2">{student.course}</td>
                             <td className="border-2 border-gray-400 px-4 py-2 space-x-2">
-                                <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">
-                                    Edit
-                                </button>
                                 <button
                                       onClick={() => deleteStudent(index)}
                                       className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
@@ -78,12 +114,7 @@ function App() {
                 </tbody>
             </table>
             
-            <button
-                onClick={addStudent}
-                className="mt-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
-            >
-                Create/Add Student
-            </button>
+           
         </div>
     );
 }
