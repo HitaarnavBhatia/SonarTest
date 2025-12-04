@@ -3,12 +3,13 @@ import React from "react";
 function StudentForm({
   name,
   roll,
-  course,
+  courseId,
   setName,
   setRoll,
-  setCourse,
+  setCourseId,
   addStudent,
-  isEditing
+  isEditing,
+  courses
 }) {
 
   let buttonText = "Add Student";
@@ -17,33 +18,39 @@ function StudentForm({
   }
 
   return (
-    <form onSubmit={addStudent} className="mb-6 p-4 border border-grey-300 rounded-lg bg-grey-50">
-      <h2 className="text-2xl font-semibold mb-4">Add new students</h2>
+    <form onSubmit={addStudent} className="mb-6 p-4 border bg-gray-50 rounded-lg">
+      <h2 className="text-2xl mb-4">{buttonText}</h2>
 
       <div className="flex gap-4">
         <input
-          onChange={(e) => setName(e.target.value)}
           type="text"
           placeholder="Enter Name"
           value={name}
+          onChange={(e) => setName(e.target.value)}
           className="border px-3 py-2 rounded w-1/4"
         />
 
         <input
-          className="border px-3 py-2 rounded w-1/4"
           type="number"
           placeholder="Enter Roll No"
           value={roll}
           onChange={(e) => setRoll(e.target.value)}
+          className="border px-3 py-2 rounded w-1/4"
         />
 
-        <input
+        <select
+          value={courseId}
+          onChange={(e) => setCourseId(e.target.value)}
           className="border px-3 py-2 rounded w-1/4"
-          type="text"
-          placeholder="Enter Course"
-          value={course}
-          onChange={(e) => setCourse(e.target.value)}
-        />
+        >
+          <option value="">Select Course</option>
+
+          {courses.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.title}
+            </option>
+          ))}
+        </select>
 
         <button
           type="submit"
