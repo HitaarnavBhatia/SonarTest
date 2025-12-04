@@ -1,6 +1,21 @@
 import React from "react";
 
-function StudentForm({ name, roll, course, setName, setRoll, setCourse, addStudent }) {
+function StudentForm({
+  name,
+  roll,
+  course,
+  setName,
+  setRoll,
+  setCourse,
+  addStudent,
+  isEditing
+}) {
+
+  let buttonText = "Add Student";
+  if (isEditing === true) {
+    buttonText = "Update Student";
+  }
+
   return (
     <form onSubmit={addStudent} className="mb-6 p-4 border border-grey-300 rounded-lg bg-grey-50">
       <h2 className="text-2xl font-semibold mb-4">Add new students</h2>
@@ -34,7 +49,7 @@ function StudentForm({ name, roll, course, setName, setRoll, setCourse, addStude
           type="submit"
           className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
         >
-          Add Student
+          {buttonText}
         </button>
       </div>
     </form>

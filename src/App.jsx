@@ -7,7 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  
+
   //initialized local storage, i.e it loads data from localStorage if available otherwise uses json
   let initialStudents;
   const storedStudents = localStorage.getItem("students");
@@ -25,10 +25,8 @@ function App() {
   const [roll, setRoll] = useState("");
   const [course, setCourse] = useState("");
 
-
-
-
-
+  const [isStudentEditing, setIsStudentEditing] = useState(false);
+  const [studentIndex, setStudentIndex] = useState(-1);
 
   //saves students data to locaStorage whenevr its updated
   useEffect(
@@ -36,12 +34,14 @@ function App() {
     [students]
   );
 
+  //------ADD Student---------
   function addStudent(e) {
     e.preventDefault();
 
     let rollExists = false;
 
     for (let i = 0; i < students.length; i++) {
+      if (isStudentEditing && i === studentIndex) continue;
       if (students[i].roll === roll) {
         rollExists = true;
         break;
@@ -53,20 +53,33 @@ function App() {
       return;
     }
 
-    const newStudent = {
-      id: `S00${students.length + 1}`,
-      name,
-      roll,
-      course,
-    };
+    if (isStudentEditing) {
+      // Update existing student
+      const updatedStudents = students.slice();
+      updatedStudents[studentIndex].name = name;
+      updatedStudents[studentIndex].roll = roll;
+      updatedStudents[studentIndex].course = course;
+      setStudents(updatedStudents);
 
-    setStudents([...students, newStudent]);
+      toast.success("Student updated successfully!");
+      setIsStudentEditing(false);
+      setStudentIndex(-1);
+    } else {
+      const newStudent = {
+        id: `S00${students.length + 1}`,
+        name,
+        roll,
+        course,
+      };
+
+      setStudents([...students, newStudent]);
+      toast.success("Student added successfully!");
+    }
 
     setName("");
     setRoll("");
     setCourse("");
 
-    toast.success("Student added successfully!");
   }
 
   //------DELETE Student---------
@@ -75,8 +88,17 @@ function App() {
     newStudents.splice(index, 1);
     setStudents(newStudents);
 
-    setMessage("Student deleted!");
-    setTimeout(() => setMessage(""), 2000);
+    toast.success("Student deleted!");
+  }
+
+  //------EDIT Student---------
+  function editStudent(index) {
+    const student = students[index];
+    setName(student.name);
+    setRoll(student.roll);
+    setCourse(student.course);
+    setIsStudentEditing(true);
+    setStudentIndex(index);
   }
 
   return (
@@ -93,6 +115,7 @@ function App() {
         setRoll={setRoll}
         setCourse={setCourse}
         addStudent={addStudent}
+        isEditing={isStudentEditing}
       />
 
       <table className="border border-gray-400 w-full shadow-lg">
