@@ -3,22 +3,24 @@ import React from "react";
 function StudentForm({
   name,
   roll,
-  courseId,
+  courseIds,
   setName,
   setRoll,
-  setCourseId,
+  setCourseIds,
   addStudent,
   isEditing,
-  courses
+  courses,
 }) {
-
   let buttonText = "Add Student";
   if (isEditing === true) {
     buttonText = "Update Student";
   }
 
   return (
-    <form onSubmit={addStudent} className="mb-6 p-4 border bg-gray-50 rounded-lg">
+    <form
+      onSubmit={addStudent}
+      className="mb-6 p-4 border bg-gray-50 rounded-lg"
+    >
       <h2 className="text-2xl mb-4">{buttonText}</h2>
 
       <div className="flex flex-col md:flex-row gap-4">
@@ -39,12 +41,19 @@ function StudentForm({
         />
 
         <select
-          value={courseId}
-          onChange={(e) => setCourseId(e.target.value)}
+          multiple
+          size={4}
           className="border px-3 py-2 rounded w-full md:w-1/4"
+          value={courseIds}
+          onChange={(e) => {
+            const selected = [];
+            for (let i = 0; i < e.target.options.length; i++) {
+              if (e.target.options[i].selected)
+                selected.push(e.target.options[i].value);
+            }
+            setCourseIds(selected);
+          }}
         >
-          <option value="">Select Course</option>
-
           {courses.map((c) => (
             <option key={c.id} value={c.id}>
               {c.title}

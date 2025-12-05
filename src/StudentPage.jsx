@@ -34,7 +34,7 @@ function StudentsPage() {
 
   const [name, setName] = useState("");
   const [roll, setRoll] = useState("");
-  const [courseId, setCourseId] = useState("");
+  const [courseIds, setCourseIds] = useState([]);
 
   const [isStudentEditing, setIsStudentEditing] = useState(false);
   const [studentIndex, setStudentIndex] = useState(-1);
@@ -66,7 +66,7 @@ function StudentsPage() {
       const updatedStudents = students.slice();
       updatedStudents[studentIndex].name = name;
       updatedStudents[studentIndex].roll = roll;
-      updatedStudents[studentIndex].courseId = courseId;
+      updatedStudents[studentIndex].courseIds = courseIds;
       setStudents(updatedStudents);
 
       toast.success("Student updated!");
@@ -78,7 +78,7 @@ function StudentsPage() {
         id: `S00${students.length + 1}`,
         name,
         roll,
-        courseId,
+        courseIds,
       };
 
       setStudents([...students, newStudent]);
@@ -88,7 +88,7 @@ function StudentsPage() {
     // Reset form
     setName("");
     setRoll("");
-    setCourseId("");
+    setCourseIds("");
   }
 
   // DELETE student
@@ -105,7 +105,7 @@ function StudentsPage() {
     const s = students[index];
     setName(s.name);
     setRoll(s.roll);
-    setCourseId(s.courseId);
+    setCourseIds(s.courseIds || []);
 
     setIsStudentEditing(true);
     setStudentIndex(index);
@@ -116,61 +116,99 @@ function StudentsPage() {
       <ToastContainer />
 
       <h1 className="text-4xl font-bold mb-6 text-center">Student Table</h1>
+      {showForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <button
+              onClick={() => setShowForm(false)}
+              className="float-right text-red-600 text-xl"
+            >
+              ✖
+            </button>
+
+            <StudentForm
+              name={name}
+              roll={roll}
+              courseIds={courseIds}
+              setName={setName}
+              setRoll={setRoll}
+              setCourseIds={setCourseIds}
+              addStudent={(e) => {
+                addStudent(e);
+                setShowForm(false); // close modal after adding
+              }}
+              isEditing={isStudentEditing}
+              courses={courses}
+            />
+          </div>
+        </div>
+      )}
 
       <StudentForm
         name={name}
         roll={roll}
-        courseId={courseId}
+        courseIds={courseIds}
         setName={setName}
         setRoll={setRoll}
-        setCourseId={setCourseId}
+        setCourseIds={setCourseIds}
         addStudent={addStudent}
         isEditing={isStudentEditing}
         courses={courses}
       />
       <div className="overflow-x-auto">
-      <table className="min-w-full border border-gray-400 shadow-lg">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="border px-4 py-2">ID</th>
-            <th className="border px-4 py-2">Name</th>
-            <th className="border px-4 py-2">Roll No</th>
-            <th className="border px-4 py-2">Course</th>
-            <th className="border px-4 py-2">Actions</th>
-          </tr>
-        </thead>
+        <table className="min-w-full border border-gray-400 shadow-lg">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="border px-4 py-2">ID</th>
+              <th className="border px-4 py-2">Name</th>
+              <th className="border px-4 py-2">Roll No</th>
+              <th className="border px-4 py-2">Course</th>
+              <th className="border px-4 py-2">Actions</th>
+            </tr>
+          </thead>
 
-        <tbody>
-          {students.map((s, index) => {
-            const courseTitle =
-              courses.find((c) => c.id === s.courseId)?.title || "N/A";
+          <tbody>
+            {students.map((s, index) => {
+              const courseTitle =
+                courses.find((c) => c.id === s.courseIds)?.title || "N/A";
 
-            return (
-              <tr key={s.id}>
-                <td className="border px-4 py-2">{s.id}</td>
-                <td className="border px-4 py-2">{s.name}</td>
-                <td className="border px-4 py-2">{s.roll}</td>
-                <td className="border px-4 py-2">{courseTitle}</td>
+              return (
+                <tr key={s.id}>
+                  <td className="border px-4 py-2">{s.id}</td>
+                  <td className="border px-4 py-2">{s.name}</td>
+                  <td className="border px-4 py-2">{s.roll}</td>
+                  <td className="border px-4 py-2">
+                    {s.courseIds
+                      ?.map((id) => {
+                        for (let i = 0; i < courses.length; i++) {
+                          if (courses[i].id === id) {
+                            return courses[i].title;
+                          }
+                        }
+                        return "";
+                      })
+                      .join(", ")}
+                  </td>
 
-                <td className="border px-4 py-2">
-                  <button
-                    onClick={() => editStudent(index)}
-                    className="bg-blue-600 text-white px-3 py-1 rounded mr-2"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => deleteStudent(index)}
-                    className="bg-red-600 text-white px-3 py-1 rounded"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                  <td className="border px-4 py-2">
+                    <button
+                      onClick={() => editStudent(index)}
+                      className="bg-blue-600 text-white px-3 py-1 rounded mr-2"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => deleteStudent(index)}
+                      className="bg-red-600 text-white px-3 py-1 rounded"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </div>
   );
