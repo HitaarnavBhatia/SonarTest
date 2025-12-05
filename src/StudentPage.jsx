@@ -39,6 +39,8 @@ function StudentsPage() {
   const [isStudentEditing, setIsStudentEditing] = useState(false);
   const [studentIndex, setStudentIndex] = useState(-1);
 
+  const [showForm, setShowForm] = useState(false);
+
   useEffect(() => {
     localStorage.setItem("students", JSON.stringify(students));
   }, [students]);
@@ -88,7 +90,7 @@ function StudentsPage() {
     // Reset form
     setName("");
     setRoll("");
-    setCourseIds("");
+    setCourseIds([]);
   }
 
   // DELETE student
@@ -109,6 +111,8 @@ function StudentsPage() {
 
     setIsStudentEditing(true);
     setStudentIndex(index);
+
+    setShowForm(true);
   }
 
   return (
@@ -116,33 +120,33 @@ function StudentsPage() {
       <ToastContainer />
 
       <h1 className="text-4xl font-bold mb-6 text-center">Student Table</h1>
-      {showForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <button
-              onClick={() => setShowForm(false)}
-              className="float-right text-red-600 text-xl"
-            >
-              ✖
-            </button>
 
-            <StudentForm
-              name={name}
-              roll={roll}
-              courseIds={courseIds}
-              setName={setName}
-              setRoll={setRoll}
-              setCourseIds={setCourseIds}
-              addStudent={(e) => {
-                addStudent(e);
-                setShowForm(false); // close modal after adding
-              }}
-              isEditing={isStudentEditing}
-              courses={courses}
-            />
-          </div>
-        </div>
-      )}
+      <button
+        onClick={() => {
+          setIsStudentEditing(false); 
+          setName("");
+          setRoll("");
+          setCourseIds([]);
+          setShowForm(true);
+        }}
+        className="bg-green-600 text-white px-4 py-2 rounded mb-6"
+      >
+        Add Student
+      </button>
+
+      {showForm && (
+  <div className="fixed inset-0 bg-black/40 flex justify-center items-center">
+    
+    
+    <div className="bg-white p-6 rounded-lg shadow-2xl w-[450px] relative">
+
+     
+      <button
+        onClick={() => setShowForm(false)}
+        className="absolute top-3 right-3 text-red-600 text-xl"
+      >
+        x
+      </button>
 
       <StudentForm
         name={name}
@@ -151,10 +155,21 @@ function StudentsPage() {
         setName={setName}
         setRoll={setRoll}
         setCourseIds={setCourseIds}
-        addStudent={addStudent}
+        addStudent={(e) => {
+          addStudent(e);
+          setShowForm(false);
+        }}
         isEditing={isStudentEditing}
         courses={courses}
+        isModal={true}  
       />
+
+    </div>
+  </div>
+)}
+
+    
+
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-400 shadow-lg">
           <thead className="bg-gray-100">

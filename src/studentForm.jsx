@@ -10,6 +10,7 @@ function StudentForm({
   addStudent,
   isEditing,
   courses,
+  isModal
 }) {
   let buttonText = "Add Student";
   if (isEditing === true) {
@@ -23,13 +24,13 @@ function StudentForm({
     >
       <h2 className="text-2xl mb-4">{buttonText}</h2>
 
-      <div className="flex flex-col md:flex-row gap-4">
+      <div className={`flex flex-col gap-4 ${isModal ? "" : "md:flex-row"}`}>
         <input
           type="text"
           placeholder="Enter Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="border px-3 py-2 rounded w-full md:w-1/4"
+          className={`border px-3 py-2 rounded ${isModal ? "w-full" : "w-full md:w-1/4"}`}
         />
 
         <input
@@ -37,13 +38,13 @@ function StudentForm({
           placeholder="Enter Roll No"
           value={roll}
           onChange={(e) => setRoll(e.target.value)}
-          className="border px-3 py-2 rounded w-full md:w-1/4"
+          className={`border px-3 py-2 rounded ${isModal ? "w-full" : "w-full md:w-1/4"}`}
         />
 
         <select
           multiple
           size={4}
-          className="border px-3 py-2 rounded w-full md:w-1/4"
+          className={`border px-3 py-2 rounded ${isModal ? "w-full" : "w-full md:w-1/4"}`}
           value={courseIds}
           onChange={(e) => {
             const selected = [];

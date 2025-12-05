@@ -1,14 +1,30 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
 import StudentsPage from "./StudentPage";
 import CoursesPage from "./CoursePage";
 
 function App() {
   return (
     <BrowserRouter>
-      <nav className="p-4 flex flex-col md:flex-row gap-4 md:gap-6 bg-gray-200">
-        <Link to="/student">Students</Link>
-        <Link to="/course">Courses</Link>
+      <nav className="p-4 bg-gray-100/60 backdrop-blur-md shadow-md border-b border-gray-300 flex justify-center rounded-4xl">
+        <div className="flex gap-8 text-lg font-medium">
+          <NavLink to="/student"
+            className={({ isActive }) =>`px-4 py-2 rounded-lg transition ${isActive 
+              ? "bg-blue-600 text-white shadow" 
+              : "text-gray-700 hover:bg-gray-200"}`
+            }
+          >
+            Students
+          </NavLink>
+          <NavLink to="/course"
+            className={({ isActive }) =>`px-4 py-2 rounded-lg transition ${isActive 
+              ? "bg-blue-600 text-white shadow" 
+              : "text-gray-700 hover:bg-gray-200"}`
+            }
+          >
+            Courses
+          </NavLink>
+        </div>
       </nav>
 
       <Routes>
