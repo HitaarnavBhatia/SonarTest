@@ -26,13 +26,13 @@ function CourseForm({
         {isEditing ? "Update Course" : "Add New Course"}
       </h2>
 
-      <div className="flex gap-4">
+      <div className="flex flex-col md:flex-row gap-4">
         <input
           type="text"
           placeholder="Course Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="border px-3 py-2 rounded w-1/4"
+          className="border px-3 py-2 rounded w-full md:w-1/4"
         />
 
         <input
@@ -40,7 +40,7 @@ function CourseForm({
           placeholder="Duration"
           value={duration}
           onChange={(e) => setDuration(e.target.value)}
-          className="border px-3 py-2 rounded w-1/4"
+          className="border px-3 py-2 rounded w-full md:w-1/4"
         />
 
         <input
@@ -48,7 +48,7 @@ function CourseForm({
           placeholder="Description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="border px-3 py-2 rounded w-1/4"
+          className="border px-3 py-2 rounded w-full md:w-1/4"
         />
 
         <button

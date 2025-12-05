@@ -116,8 +116,8 @@ function CoursesPage() {
         addCourse={addCourse}
         isEditing={isEditingCourse}
       />
-
-      <table className="border border-gray-400 w-full shadow-lg">
+      <div className="overflow-x-auto">
+      <table className="min-w-full border border-gray-400 shadow-lg">
         <thead className="bg-gray-100">
           <tr>
             <th className="border-2 px-4 py-2">ID</th>
@@ -156,6 +156,7 @@ function CoursesPage() {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

@@ -6,7 +6,7 @@ import CoursesPage from "./CoursePage";
 function App() {
   return (
     <BrowserRouter>
-      <nav className="p-4 flex gap-6 bg-gray-200">
+      <nav className="p-4 flex flex-col md:flex-row gap-4 md:gap-6 bg-gray-200">
         <Link to="/student">Students</Link>
         <Link to="/course">Courses</Link>
       </nav>

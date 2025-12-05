@@ -128,8 +128,8 @@ function StudentsPage() {
         isEditing={isStudentEditing}
         courses={courses}
       />
-
-      <table className="border w-full shadow-lg">
+      <div className="overflow-x-auto">
+      <table className="min-w-full border border-gray-400 shadow-lg">
         <thead className="bg-gray-100">
           <tr>
             <th className="border px-4 py-2">ID</th>
@@ -171,6 +171,7 @@ function StudentsPage() {
           })}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

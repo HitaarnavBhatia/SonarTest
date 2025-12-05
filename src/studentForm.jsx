@@ -21,13 +21,13 @@ function StudentForm({
     <form onSubmit={addStudent} className="mb-6 p-4 border bg-gray-50 rounded-lg">
       <h2 className="text-2xl mb-4">{buttonText}</h2>
 
-      <div className="flex gap-4">
+      <div className="flex flex-col md:flex-row gap-4">
         <input
           type="text"
           placeholder="Enter Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="border px-3 py-2 rounded w-1/4"
+          className="border px-3 py-2 rounded w-full md:w-1/4"
         />
 
         <input
@@ -35,13 +35,13 @@ function StudentForm({
           placeholder="Enter Roll No"
           value={roll}
           onChange={(e) => setRoll(e.target.value)}
-          className="border px-3 py-2 rounded w-1/4"
+          className="border px-3 py-2 rounded w-full md:w-1/4"
         />
 
         <select
           value={courseId}
           onChange={(e) => setCourseId(e.target.value)}
-          className="border px-3 py-2 rounded w-1/4"
+          className="border px-3 py-2 rounded w-full md:w-1/4"
         >
           <option value="">Select Course</option>
 
