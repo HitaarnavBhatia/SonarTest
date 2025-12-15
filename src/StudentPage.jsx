@@ -79,7 +79,13 @@ function StudentsPage() {
       toast.success("Student deleted!");
       fetchStudents();
     } catch (err) {
-      toast.error("Error deleting student");
+      console.error("DELETE ERROR FULL:", err);
+      console.error("DELETE ERROR RESPONSE:", err.response);
+      toast.error(
+        err.response?.data?.error ||
+        err.message ||
+        "Unknown delete error"
+      );
     }
   }
 
@@ -89,8 +95,8 @@ function StudentsPage() {
     setName(s.name);
     setRoll(s.roll);
 
-    // backend returns course_ids as array of numbers
-    setCourseIds(s.course_ids || []);
+
+    setCourseIds([]);
 
     setIsStudentEditing(true);
     setEditingStudentId(s.id);

@@ -1,96 +1,83 @@
 import React, { useState, useEffect } from "react";
-import coursesData from "./courses.json";
 import CourseForm from "./courseForm";
+import api from "./api/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function CoursesPage() {
-  let initialCourses;
-  const stored = localStorage.getItem("courses");
-
-  if (stored) {
-    initialCourses = JSON.parse(stored);
-  } else {
-    initialCourses = coursesData;
-  }
-
-  const [courses, setCourses] = useState(initialCourses);
+  const [courses, setCourses] = useState([]);
 
   const [title, setTitle] = useState("");
   const [duration, setDuration] = useState("");
-  const [Description, setDescription] = useState("");
+  const [description, setDescription] = useState("");
 
   const [isEditingCourse, setIsEditingCourse] = useState(false);
-  const [courseIndex, setCourseIndex] = useState(-1);
-
+  const [editingCourseId, setEditingCourseId] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
-  useEffect(
-    () => localStorage.setItem("courses", JSON.stringify(courses)),
-    [courses]
-  );
+  useEffect(() => {
+    fetchCourses();
+  }, []);
 
-  function addCourse(e) {
+  async function fetchCourses() {
+    try {
+      const res = await api.get("/courses");
+      setCourses(res.data);
+    } catch {
+      toast.error("Failed to load courses");
+    }
+  }
+
+  // ADD course
+  async function addCourse(e) {
     e.preventDefault();
 
-    let titleExists = false;
-
-    for (let i = 0; i < courses.length; i++) {
-      if (isEditingCourse && i === courseIndex) continue;
-
-      if (courses[i].title.toLowerCase() === title.toLowerCase()) {
-        titleExists = true;
-        break;
+    try {
+      if (isEditingCourse) {
+        toast.info("Update API not implemented yet");
+      } else {
+        await api.post("/courses", {
+          title,
+          duration,
+          description,
+        });
+        toast.success("Course added");
       }
+
+      fetchCourses();
+      resetForm();
+    } catch (err) {
+      toast.error("Error saving course");
     }
+  }
 
-    if (titleExists) {
-      toast.error("Course title already exists!");
-      return;
+  //DELETE course
+  async function deleteCourse(id) {
+    try {
+      await api.delete(`/courses/${id}`);
+      toast.success("Course deleted");
+      fetchCourses();
+    } catch {
+      toast.error("Error deleting course");
     }
+  }
 
-    if (isEditingCourse) {
-      const updated = courses.slice();
-      updated[courseIndex].title = title;
-      updated[courseIndex].duration = duration;
-      updated[courseIndex].Description = Description;
-      setCourses(updated);
-      toast.success("Course updated!");
-      setIsEditingCourse(false);
-      setCourseIndex(-1);
-    } else {
-      const newCourse = {
-        id: `C00${courses.length + 1}`,
-        title,
-        duration,
-        Description,
-      };
+  function editCourse(course) {
+    setTitle(course.title);
+    setDuration(course.duration);
+    setDescription(course.description);
+    setEditingCourseId(course.id);
+    setIsEditingCourse(true);
+    setShowForm(true);
+  }
 
-      setCourses([...courses, newCourse]);
-      toast.success("Course added!");
-    }
-
+  function resetForm() {
     setTitle("");
     setDuration("");
     setDescription("");
+    setIsEditingCourse(false);
+    setEditingCourseId(null);
     setShowForm(false);
-  }
-
-  function deleteCourse(index) {
-    const newData = courses.slice();
-    newData.splice(index, 1);
-    setCourses(newData);
-    toast.success("Course deleted!");
-  }
-
-  function editCourse(index) {
-    const c = courses[index];
-    setTitle(c.title);
-    setDuration(c.duration);
-    setDescription(c.Description);
-    setIsEditingCourse(true);
-    setCourseIndex(index);
-    setShowForm(true);
   }
 
   return (
@@ -101,10 +88,7 @@ function CoursesPage() {
 
       <button
         onClick={() => {
-          setIsEditingCourse(false);
-          setTitle("");
-          setDuration("");
-          setDescription("");
+          resetForm();
           setShowForm(true);
         }}
         className="bg-green-600 text-white px-4 py-2 rounded mb-6"
@@ -125,7 +109,7 @@ function CoursesPage() {
             <CourseForm
               title={title}
               duration={duration}
-              Description={Description}
+              description={description}
               setTitle={setTitle}
               setDuration={setDuration}
               setDescription={setDescription}
@@ -140,38 +124,37 @@ function CoursesPage() {
         <table className="min-w-full border border-gray-400 shadow-lg">
           <thead className="bg-gray-100">
             <tr>
-              <th className="border-2 px-4 py-2">ID</th>
-              <th className="border-2 px-4 py-2">Course Title</th>
-              <th className="border-2 px-4 py-2">Duration</th>
-              <th className="border-2 px-4 py-2">Description</th>
-              <th className="border-2 px-4 py-2">Actions</th>
+              <th className="border px-4 py-2">ID</th>
+              <th className="border px-4 py-2">Course Title</th>
+              <th className="border px-4 py-2">Duration</th>
+              <th className="border px-4 py-2">Description</th>
+              <th className="border px-4 py-2">Actions</th>
             </tr>
           </thead>
 
           <tbody>
-            {courses.map((course, index) => (
+            {courses.map((course) => (
               <tr key={course.id}>
                 <td className="border px-4 py-2">{course.id}</td>
                 <td className="border px-4 py-2">{course.title}</td>
                 <td className="border px-4 py-2">{course.duration}</td>
-                <td className="border px-4 py-2">{course.Description}</td>
+                <td className="border px-4 py-2">{course.description}</td>
 
                 <td className="border px-4 py-2">
                   <button
-                    onClick={() => editCourse(index)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded mr-2"
+                    onClick={() => editCourse(course)}
+                    className="bg-blue-600 text-white px-3 py-1 rounded mr-2"
                   >
                     Edit
                   </button>
 
                   <button
-                    onClick={() => deleteCourse(index)}
-                    className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
+                    onClick={() => deleteCourse(course.id)}
+                    className="bg-red-600 text-white px-3 py-1 rounded"
                   >
                     Delete
                   </button>
                 </td>
-
               </tr>
             ))}
           </tbody>

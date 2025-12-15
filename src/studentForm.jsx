@@ -19,7 +19,7 @@ function StudentForm({
       <h2 className="text-2xl mb-4">{buttonText}</h2>
 
       <div className={`flex flex-col gap-4 ${isModal ? "" : "md:flex-row"}`}>
-        
+
         <input
           type="text"
           placeholder="Enter Name"
@@ -50,11 +50,13 @@ function StudentForm({
             setCourseIds(selectedValues);
           }}
         >
-          {courses.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.title}
-            </option>
-          ))}
+          {Array.isArray(courses) &&
+            courses.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.title}
+              </option>
+            ))
+          }
         </select>
 
         <button
