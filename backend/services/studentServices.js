@@ -9,12 +9,16 @@ const getStudents = async () => {
       s.id,
       s.name,
       s.roll,
-      ARRAY_AGG(c.title) AS courses
+      COALESCE(
+        ARRAY_AGG(c.title)
+        FILTER (WHERE c.title IS NOT NULL),
+        '{}'
+      ) AS courses
     FROM students s
     LEFT JOIN student_courses sc ON sc.student_id = s.id
     LEFT JOIN courses c ON c.id = sc.course_id
     WHERE s.is_active = TRUE
-    GROUP BY s.id
+    GROUP BY s.id, s.name, s.roll
     ORDER BY s.id;
   `);
 
