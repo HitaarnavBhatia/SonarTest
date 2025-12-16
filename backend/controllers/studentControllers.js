@@ -9,7 +9,7 @@ exports.getStudents = async (req, res) => {
     logger.info("Fetched students successfully");
     res.json(students);
   } catch (err) {
-    logger.error("Error fetching students: " + err.message);
+    logger.error("Error fetching students FULL:", err);
     res.status(500).send("Error fetching students");
   }
 };
@@ -22,7 +22,7 @@ exports.addStudent = async (req, res) => {
     logger.info("Student added");
     res.json({ message: "Student added" });
   } catch (err) {
-    logger.error("Error adding student: " + err.message);
+    logger.error("Error adding student FULL:", err);
     res.status(500).send("Error adding student");
   }
 };
@@ -35,7 +35,7 @@ exports.updateStudent = async (req, res) => {
     logger.info("Student updated");
     res.json({ message: "Student updated" });
   } catch (err) {
-    logger.error("Error updating student: " + err.message);
+    logger.error("Error updating student FULL:", err);
     res.status(500).send("Error updating student");
   }
 };
@@ -45,9 +45,10 @@ exports.deleteStudent = async (req, res) => {
 
   try {
     await studentServices.deleteStudent(req.params.id);
+    logger.info("Student deleted");
     res.json({ message: "Student deleted" });
   } catch (err) {
-    logger.error("Error deleting student (controller): " + err.message);
+    logger.error("Error deleting student FULL:", err);
     res.status(500).json({ error: "Error deleting student" });
   }
 };
