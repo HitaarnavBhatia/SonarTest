@@ -4,26 +4,33 @@ const logger = require("../logger");
 const getStudents = async () => {
   logger.info("Service: Fetching students from DB");
 
-  const result = await db.query(`
-    SELECT 
-      s.id,
-      s.name,
-      s.roll,
-      COALESCE(
-        ARRAY_AGG(c.title)
-        FILTER (WHERE c.title IS NOT NULL),
-        '{}'
-      ) AS courses
-    FROM students s
-    LEFT JOIN student_courses sc ON sc.student_id = s.id
-    LEFT JOIN courses c ON c.id = sc.course_id
-    WHERE s.is_active = TRUE
-    GROUP BY s.id, s.name, s.roll
-    ORDER BY s.id;
-  `);
+  try {
+    const result = await db.query(`
+      SELECT 
+        s.id,
+        s.name,
+        s.roll,
+        COALESCE(
+          ARRAY_AGG(c.title)
+          FILTER (WHERE c.title IS NOT NULL),
+          '{}'
+        ) AS courses
+      FROM students s
+      LEFT JOIN student_courses sc ON sc.student_id = s.id
+      LEFT JOIN courses c ON c.id = sc.course_id
+      WHERE s.is_active = TRUE
+      GROUP BY s.id, s.name, s.roll
+      ORDER BY s.id;
+    `);
 
-  return result.rows;
+    return result.rows;
+
+  } catch (err) {
+    logger.error("getStudents DB ERROR FULL:", err);
+    throw err;
+  }
 };
+
 
 const addStudent = async ({ name, roll, courseIds = [] }) => {
   const client = await db.connect();
