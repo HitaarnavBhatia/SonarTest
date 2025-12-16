@@ -22,59 +22,85 @@ const getStudents = async () => {
 };
 
 const addStudent = async ({ name, roll, courseIds = [] }) => {
-  logger.info(`Service: Adding student ${name}`);
+  const client = await db.connect();
 
-  const studentRes = await db.query(
-    `INSERT INTO students(name, roll, is_active)
-     VALUES ($1, $2, TRUE)
-     RETURNING id`,
-    [name, roll]
-  );
+  try {
+    await client.query("BEGIN");
 
-  const studentId = studentRes.rows[0].id;
-
-  for (const cid of courseIds) {
-    await db.query(
-      `INSERT INTO student_courses(student_id, course_id)
-       VALUES ($1, $2)`,
-      [studentId, cid]
+    const studentRes = await client.query(
+      `INSERT INTO students(name, roll, is_active)
+       VALUES ($1, $2, TRUE)
+       RETURNING id`,
+      [name, roll]
     );
+
+    const studentId = studentRes.rows[0].id;
+
+    for (const cid of courseIds) {
+      await client.query(
+        `INSERT INTO student_courses(student_id, course_id)
+         VALUES ($1, $2)`,
+        [studentId, cid]
+      );
+    }
+
+    await client.query("COMMIT");
+    return { id: studentId };
+
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
   }
 };
 
 const updateStudent = async (id, { name, roll, courseIds = [] }) => {
-  logger.info(`Service: Updating student ${id}`);
+  const client = await db.connect();
 
-  await db.query(
-    `UPDATE students
-     SET name = $1, roll = $2, updated_at = NOW()
-     WHERE id = $3`,
-    [name, roll, id]
-  );
+  try {
+    await client.query("BEGIN");
 
-  await db.query(
-    `DELETE FROM student_courses WHERE student_id = $1`,
-    [id]
-  );
-
-  for (const cid of courseIds) {
-    await db.query(
-      `INSERT INTO student_courses(student_id, course_id)
-       VALUES ($1, $2)`,
-      [id, cid]
+    await client.query(
+      `UPDATE students
+       SET name = $1, roll = $2, updated_at = NOW()
+       WHERE id = $3`,
+      [name, roll, id]
     );
+
+    await client.query(
+      `DELETE FROM student_courses WHERE student_id = $1`,
+      [id]
+    );
+
+    for (const cid of courseIds) {
+      await client.query(
+        `INSERT INTO student_courses(student_id, course_id)
+         VALUES ($1, $2)`,
+        [id, cid]
+      );
+    }
+
+    await client.query("COMMIT");
+    return { success: true };
+
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
   }
 };
 
 const deleteStudent = async (id) => {
-  logger.info(`Service: Deleting student ${id}`);
-
   await db.query(
     `UPDATE students
      SET is_active = FALSE, updated_at = NOW()
      WHERE id = $1`,
     [id]
   );
+
+  return { success: true };
 };
 
 module.exports = {
