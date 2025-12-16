@@ -8,11 +8,9 @@ const courseRoutes = require("./routes/courseRoutes");
 
 const app = express();
 
-// MIDDLEWARE
 app.use(cors());
 app.use(express.json());
 
-// HEALTH CHECK
 app.get("/", (req, res) => {
   logger.info("Home route accessed");
   res.send("Backend is running correctly!");
@@ -23,7 +21,9 @@ app.use("/students", studentRoutes);
 app.use("/courses", courseRoutes);
 
 // START SERVER
-app.listen(4000, () => {
-  logger.info("Backend running on port 4000");
-  console.log("Backend running on port 4000");
+const PORT = process.env.PORT || 4000;
+
+app.listen(PORT, () => {
+  logger.info(`Backend running on port ${PORT}`);
+  console.log(`Backend running on port ${PORT}`);
 });
