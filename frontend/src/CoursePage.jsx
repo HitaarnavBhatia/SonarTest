@@ -19,14 +19,21 @@ function CoursesPage() {
     fetchCourses();
   }, []);
 
-  async function fetchCourses() {
-    try {
-      const res = await api.get("/courses");
-      setCourses(res.data);
-    } catch {
-      toast.error("Failed to load courses");
-    }
+ async function fetchCourses() {
+  try {
+    const res = await api.get("/courses");
+
+    const coursesArray = Array.isArray(res.data)
+      ? res.data
+      : res.data.data || res.data.rows || [];
+
+    setCourses(coursesArray);
+  } catch (err) {
+    toast.error("Failed to load courses");
+    setCourses([]);
   }
+}
+
 
   // ADD course
   async function addCourse(e) {
@@ -133,7 +140,7 @@ function CoursesPage() {
           </thead>
 
           <tbody>
-            {courses.map((course) => (
+            {Array.isArray(courses) && courses.map((course) => (
               <tr key={course.id}>
                 <td className="border px-4 py-2">{course.id}</td>
                 <td className="border px-4 py-2">{course.title}</td>

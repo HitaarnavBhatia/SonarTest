@@ -25,23 +25,35 @@ function StudentsPage() {
     fetchCourses();
   }, []);
 
-  async function fetchStudents() {
-    try {
-      const res = await api.get("/students");
-      setStudents(res.data);
-    } catch (err) {
-      toast.error("Failed to load students");
-    }
-  }
+async function fetchStudents() {
+  try {
+    const res = await api.get("/students");
 
-  async function fetchCourses() {
-    try {
-      const res = await api.get("/courses");
-      setCourses(res.data);
-    } catch (err) {
-      toast.error("Failed to load courses");
-    }
+    const studentsArray = Array.isArray(res.data)
+      ? res.data
+      : res.data.data || res.data.rows || [];
+
+    setStudents(studentsArray);
+  } catch (err) {
+    toast.error("Failed to load students");
+    setStudents([]); // safety
   }
+}
+async function fetchCourses() {
+  try {
+    const res = await api.get("/courses");
+
+    const coursesArray = Array.isArray(res.data)
+      ? res.data
+      : res.data.data || res.data.rows || [];
+
+    setCourses(coursesArray);
+  } catch (err) {
+    toast.error("Failed to load courses");
+    setCourses([]);
+  }
+}
+
 
   // Add or update student
   async function addStudent(e) {
@@ -167,7 +179,7 @@ function StudentsPage() {
           </thead>
 
           <tbody>
-            {students.map((s, index) => (
+            {Array.isArray(students) && students.map((s, index) => (
               <tr key={s.id}>
                 <td className="border px-4 py-2">{s.id}</td>
                 <td className="border px-4 py-2">{s.name}</td>
