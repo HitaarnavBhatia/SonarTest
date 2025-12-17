@@ -1,25 +1,21 @@
 const express = require("express");
 const cors = require("cors");
-
 const app = express();
 
-// middleware
+const studentRoutes = require("./routes/studentRoutes");
+const courseRoutes = require("./routes/courseRoutes");
+
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 
-// health check
 app.get("/", (req, res) => {
-  res.send("OK");
+  res.send("Backend is running correctly!");
 });
 
-// test API route (important)
-app.get("/students", (req, res) => {
-  res.json([]);
-});
+app.use("/students", studentRoutes);
+app.use("/courses", courseRoutes);
 
-// Railway requires process.env.PORT
-const PORT = process.env.PORT || 8080;
-
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
-  console.log("OK server listening on", PORT);
+  console.log("Backend running on port", PORT);
 });
