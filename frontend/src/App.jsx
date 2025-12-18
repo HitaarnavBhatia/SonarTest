@@ -18,7 +18,7 @@ function App() {
       ">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
 
-          {/* LEFT D */}
+          {/* LEFT  */}
           <div className="text-xl font-bold text-blue-600">
             StudentManager
           </div>
@@ -81,14 +81,23 @@ function App() {
         </div>
       </nav>
 
-      {/* ROUTES */}
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/student" element={<StudentsPage />} />
-        <Route path="/course" element={<CoursesPage />} />
-      </Routes>
+     <div className="min-h-screen bg-gray-100 pt-8">
+        <div className="max-w-7xl mx-auto px-6">
+          
+          {/* CARD */}
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/student" element={<StudentsPage />} />
+              <Route path="/course" element={<CoursesPage />} />
+            </Routes>
+          </div>
+
+        </div>
+      </div>
     </BrowserRouter>
   );
 }
+
 
 export default App;
